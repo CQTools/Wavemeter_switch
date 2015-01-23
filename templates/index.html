@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+          rel="stylesheet">
+  <script type=text/javascript>
+    $(function() {
+      $('#switch_1').bind('click', function() {
+        $.ajax('/switch_1', {}, {});});
+     $('#switch_2').bind('click', function() {
+        $.ajax('/switch_2', {}, {});});
+    $('#switch_3').bind('click', function() {
+        $.ajax('/switch_3', {}, {});});
+    $('#switch_4').bind('click', function() {
+        $.ajax('/switch_4', {}, {});});
+      $('#switch_5').bind('click', function() {
+        $.ajax('/switch_5', {}, {});});
+     $('#switch_6').bind('click', function() {
+        $.ajax('/switch_6', {}, {});});
+    $('#switch_7').bind('click', function() {
+        $.ajax('/switch_7', {}, {});});
+    $('#switch_8').bind('click', function() {
+        $.ajax('/switch_8', {}, {});});
+    });
+  </script>
+
+<script type=text/javascript>
+function get_temps() {
+    $.getJSON("data",
+            function (data) {
+                $('#Wavelength').text(data.wavelength)
+                $('#Freq').text(data.freq)
+                $('#Channel').text(data.channel)
+                $('#BRoom').text(data.BoilerRoom);
+            }
+    );
+}
+setInterval('get_temps()', 1000);
+</script>
+  </head>
+   <body>
+
+    <div class="container">
+    <h1>Wavelength Viewer Secondary switch connected to channel 2</h1>
+  <div class="row">
+    <div class="col-md-3">
+        <h2>Channel number</h2>
+    </div>
+    <div class="col-md-8">
+        <h2><p id="Wavelength" class="text-center"></p></h2>
+    </div>
+  <div class="row">
+    <div class="col-md-3">
+        <h2><p class="text-center" id="Channel"></p></h2>
+    </div>
+    <div class="col-md-8">
+        <h2><p class="text-center" id="Freq"></p></h2>
+    </div>
+  </div>
+
+
+  <div class="row">
+     <div class="col-sm-3">
+        <button id="switch_1" class="btn btn-primary form-control" type="button">Channel 1</button>
+     </div>
+     <div class="col-sm-3">
+        <button id="switch_2" class="btn btn-primary form-control">Channel 2</button>
+    </div>
+     <div class="col-sm-3">
+        <button id="switch_3" class="btn btn-primary form-control">Channel 3</button>
+    </div>
+     <div class="col-sm-3">
+        <button id="switch_4" class="btn btn-primary form-control">Channel 4</button>
+    </div>
+ </div>
+  <div class="row">
+     <div class="col-sm-3">
+        <button id="switch_5" class="btn btn-primary form-control">Channel 5</button>
+     </div>
+     <div class="col-sm-3">
+        <button id="switch_6" class="btn btn-primary form-control" >Channel 6</button>
+    </div>
+     <div class="col-sm-3">
+        <button id="switch_7" class="btn btn-primary form-control">Channel 7</button>
+    </div>
+     <div class="col-sm-3">
+        <button id="switch_8" class="btn btn-primary form-control">Channel 8</button>
+    </div>
+  </div>
+  </body>
+</html>
