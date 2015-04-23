@@ -13,11 +13,11 @@ import switchcontrol
 import time
 
 app = Flask(__name__)
-port ='/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_5543131303835141E011-if00' #hardwire address as arduino fixed into switch
+#port ='/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_5543131303835141E011-if00' #hardwire address as arduino fixed into switch
 
-switch  = switchcontrol.wavemeterswitch(port) #connect to wavemeter
+#switch  = switchcontrol.wavemeterswitch(port) #connect to wavemeter
 time.sleep(5) #delay to allow for connection
-
+#switch.serial_write(1)
 
 
 
@@ -28,14 +28,14 @@ webserver = 'http://charsiew.qoptics.quantum.nus.edu.sg/cgi-bin/wavelength.cgi?'
 
 channel = 2 #current free wavemeter port on primary switch
 
-app = Flask(__name__)
 
 
-@app.route('/wavemeter')
+
+@app.route('/')
 def home(): #create webpage on index
     return render_template('index.html') #webpage temaplate
 global channel_data
-channel_data = '5'
+channel_data = '1'
     
 @app.route('/switch_1') # dont know how to do this for many switches so will be copy paste of function
 def switch1():   
@@ -131,7 +131,7 @@ def get_frequency(webdata):
     return f + ' THz' 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0',port=8080)
 
 
 
