@@ -13,11 +13,12 @@ import switchcontrol
 import time
 
 app = Flask(__name__)
-#port ='/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_5543131303835141E011-if00' #hardwire address as arduino fixed into switch
 
-#switch  = switchcontrol.wavemeterswitch(port) #connect to wavemeter
+port ='/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_5543131303835141E011-if00' #hardwire address as arduino fixed into switch
+
+switch  = switchcontrol.wavemeterswitch(port) #connect to wavemeter
 time.sleep(5) #delay to allow for connection
-#switch.serial_write(1)
+switch.serial_write(1)
 
 
 
