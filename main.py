@@ -30,7 +30,7 @@ channel = 2 #current free wavemeter port on primary switch
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/wavemeter')
 def home(): #create webpage on index
     return render_template('index.html') #webpage temaplate
 global channel_data
@@ -99,8 +99,8 @@ def switch8():
     
 @app.route("/data", methods= ['GET'])
 def get_data():
-    data  = {'wavelength': get_wavelength(read_webdata(3)),
-    'freq': get_frequency(read_webdata(3)),'channel': channel_data} 
+    data  = {'wavelength': get_wavelength(read_webdata(2)),
+    'freq': get_frequency(read_webdata(2)),'channel': channel_data} 
     return jsonify(data)
 
 
@@ -133,5 +133,4 @@ if __name__ == '__main__':
     app.run()
 
 
-if __name__ == '__main__':
-    app.run()
+
