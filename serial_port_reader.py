@@ -18,21 +18,25 @@ while(True):
     for i in range(1,9,1):
         value = []
         data = ''
-        while data != '\r':
+        while data != '\r': # readdata untile all 8 channels read
             data = ser.read()
             value.append(data)
         data_list.append(''.join(value))
     result = {}  
     wavelength = str(data_list)
-    try:
+    try: #create correct formated wavelength data from serial read
         for k, v in [s.split('@') for s in wavelength.split(',')]:
             k = k.strip(" '")
             k = k.strip("'[")    
             v = v.strip("[]")
             v = v.strip("\/r'")   
             result[k] = 'wavelength['+k+'] = ' + v +', time = '+ str(time.time())+'\n'
-    except ValueError:
-        pass
+    except ValueError: #ignores incorrect read issues
+        pass 
+    for i in range(1,9,1): #loop to handle case of channel off
+        if str(i) not in result.keys():
+            result[str(i)] = 'wavelength['+str(i)+'] = -2.00000, time = '+ str(time.time())+'\n'
+            print "channel off"
     a = sorted(result.values())
     b = ''.join(a)
     print b
