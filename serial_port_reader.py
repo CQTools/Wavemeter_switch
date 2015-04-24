@@ -35,8 +35,8 @@ while(True):
         pass 
     for i in range(1,9,1): #loop to handle case of channel off
         if str(i) not in result.keys():
-            result[str(i)] = 'wavelength['+str(i)+'] = -2.00000, time = '+ str(time.time())+'\n'
-            print "channel off"
+            result[str(i)] = 'wavelength['+str(i)+'] = -2.0000, time = '+ str(time.time())+'\n'
+            #print "channel " + str(i)+ " off"
     a = sorted(result.values())
     b = ''.join(a)
     print b
