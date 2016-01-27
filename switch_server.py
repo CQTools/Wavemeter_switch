@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 """
 Created on Mon Sep 29 14:52:13 2014
 
@@ -11,21 +9,53 @@ from flask import Flask, render_template, jsonify
 import requests
 import switchcontrol
 import time
+import ctypes
+import re
+
+wlm = ctypes.windll.wlmData # load the DLL
+
+uInt32 = ctypes.c_ulong
+uInt64 = ctypes.c_ulonglong
+double = ctypes.c_double
+long = ctypes.c_long
+
+
+LZERO = long(0)
+DZERO = double(0)
+cInstCheckForWLM = long(-1)
+cInstResetCalc = long(0)
+cInstReturnMode = cInstResetCalc
+cInstNotification = long(1)
+cInstCopyPattern = long(2)
+cInstCopyAnalysis = cInstCopyPattern
+cInstControlWLM = long(3)
+cInstControlDelay = long(4)
+cInstControlPriority = long(5)
+
+
+getfreq = wlm.GetFrequencyNum
+getfreq.restype = double
+
+getwave = wlm.GetWavelengthNum
+getwave.restype = double
+
+getpat = wlm.GetPatternNum
+getpat.restype = long
+
+wlm.SetSwitcherSignalStates(2,1,0) #sets channel 2 on
+wlm.SetSwitcherSignalStates(6,1,0) #sets channel 6 on
+wlm.SetSwitcherSignalStates(7,1,0) #sets channel 7 on
+wlm.SetSwitcherSignalStates(8,1,1) #sets channel 8 on
 
 app = Flask(__name__)
 
-port ='/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_5543131303835141E011-if00' #hardwire address as arduino fixed into switch
-
+#port ='/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_5543131303835141E011-if00' #hardwire address as arduino fixed into switch
+port = 'COM5'
 switch  = switchcontrol.wavemeterswitch(port) #connect to wavemeter
-time.sleep(5) #delay to allow for connection
+time.sleep(1) #delay to allow for connection
 switch.serial_write(1)
 
 
-
-
-
-
-webserver = 'http://charsiew.qoptics.quantum.nus.edu.sg/cgi-bin/wavelength.cgi?' #hard coded wbserver as never changes
 
 channel = 2 #current free wavemeter port on primary switch
 
@@ -101,35 +131,24 @@ def switch8():
     
 @app.route("/data", methods= ['GET'])
 def get_data():
-    data  = {'wavelength': get_wavelength(read_webdata(2)),
-    'freq': get_frequency(read_webdata(2)),'channel': channel_data} 
+    data  = {'wavelength': get_wavelength(),
+    'freq': get_frequency(),'channel': channel_data} 
     return jsonify(data)
 
 
 
-def read_webdata(channel):
-    data = requests.get(webserver + str(channel))
-    return data.text
-
-def get_wavelength(webdata):
-    s = webdata.split('/')
-    s = round(float(s[1]),5)
+def get_wavelength():
+    s = float(getwave(2,DZERO))
+    s = round(s,5)
     return str(s) + ' nm' 
 
-def get_time(webdata):
-    s = webdata.split('/')
-    return s[2]
 
-def get_channel(webdata):
-    s = webdata.split('/')
-    return s[0]
-
-def get_frequency(webdata):
-    w = float(webdata.split('/')[1])
-    c = 2.99792458e8
-    f = round(c/(w*1e-9)/1e12,5)
-    f = str(f)
-    return f + ' THz' 
+def get_frequency():
+    s = float(getfreq(2,DZERO))
+    s = round(s,5)
+    return str(s) + ' THz' 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8080)
+
+
